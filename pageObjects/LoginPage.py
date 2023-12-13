@@ -2,10 +2,10 @@ from playwright.sync_api import sync_playwright, Playwright, BrowserContext, Pag
 
 
 class LoginPage:
-    txtbox_username_id = 'get_by_label("Email:")'
-    txtbox_password_id = 'get_by_label("Password:")'
-    btn_login_role = 'get_by_role("button", name="Log in")'
-    failed_error_message = '//div[contains(text(), "Login was unsuccessful. Please correct the errors and try")]'
+    txtbox_username_id = '//input[@id="Email"]'
+    txtbox_password_id = '//input[@id="Password"]'
+    btn_login_role = '//button[@class="button-1 login-button" and contains(@class, "login-button")]'
+    failed_error_message = '//div[text()="Login was unsuccessful. Please correct the errors and try again."]'
     btn_logout_role = 'get_by_role("link", name="Logout")'
 
     def __init__(self, page: Page):
@@ -16,8 +16,8 @@ class LoginPage:
         self.page.locator(self.txtbox_username_id).type(username)
 
     def setpassword(self, password):
-        self.page.locator(self.txtbox_password_id).clear()
-        self.page.locator(self.txtbox_password_id).type(password)
+        self.page.locator(self.txtbox_password_id).click()
+        self.page.locator(self.txtbox_password_id).fill(password)
 
     def clicklogin(self):
         self.page.locator(self.btn_login_role).click()
