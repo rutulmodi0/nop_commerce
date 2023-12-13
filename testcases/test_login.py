@@ -1,3 +1,4 @@
+import pytest
 from playwright.sync_api import sync_playwright, Playwright, Page, expect
 from pageObjects.LoginPage import LoginPage
 
@@ -16,6 +17,18 @@ class Test_001_Login:
             self.page.screenshot(path="D:/nop_commerce/References/test_check_url.jpg")
             assert False
 
+    def test_login_failed(self, setup):
+        self.page = setup
+        lp = LoginPage(self.page)
+        lp.setusername("wrong@gmail.com")
+        lp.setpassword(self.password)
+        lp.clicklogin()
+        get_title = self.page.locator(lp.failed_error_message).text_content()
+        if get_title == "Login was unsuccessful. Please correct the errors and try again.":
+            assert True
+        else:
+            assert False
+
     def test_login_successful(self, setup):
         self.page = setup
         lp = LoginPage(self.page)
@@ -28,12 +41,3 @@ class Test_001_Login:
         else:
             self.page.screenshot(path="D:/nop_commerce/References/test_login_successful.jpg")
             assert False
-
-    def test_login_failed(self, setup):
-        self.page = setup
-        lp = LoginPage(self.page)
-        lp.setusername("wrong@gmail.com")
-        lp.setpassword(self.password)
-        lp.clicklogin()
-        get_title = self.page.locator(lp.failed_error_message).text_content()
-        expect(get_title).to_have_title("Login was unsuccessful. Please correct the errors and try again.")
