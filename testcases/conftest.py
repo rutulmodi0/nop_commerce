@@ -1,7 +1,10 @@
 import pytest
 from playwright.sync_api import sync_playwright
+from utilities.readproperties import *
 
-baseURL = 'https://admin-demo.nopcommerce.com'
+baseURL = ReadProperties.getApplicationURL()
+
+
 
 
 @pytest.fixture(scope="session")
@@ -22,3 +25,5 @@ def setup(browser_context):
     page.goto(baseURL, wait_until="load")
     yield page
     page.close()
+
+

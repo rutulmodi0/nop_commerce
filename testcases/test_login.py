@@ -1,13 +1,15 @@
-import pytest
+import pytest, pytest_dependency
 from playwright.sync_api import sync_playwright, Playwright, Page, expect
 from pageObjects.LoginPage import LoginPage
+from utilities.readproperties import *
 
 
 class Test_001_Login:
-    baseURL = 'https://admin-demo.nopcommerce.com'
-    username = 'admin@yourstore.com'
-    password = 'admin'
 
+    username = ReadProperties.getuseremail()
+    password = ReadProperties.getpassword()
+
+    @pytest.mark.dependency(depends=['test_login_successful'])
     def test_check_url(self, setup):
         self.page = setup
         get_title = self.page.title()
@@ -17,6 +19,7 @@ class Test_001_Login:
             self.page.screenshot(path="D:/nop_commerce/References/test_check_url.jpg")
             assert False
 
+    @pytest.mark.xfail
     def test_login_failed(self, setup):
         self.page = setup
         lp = LoginPage(self.page)
@@ -29,6 +32,7 @@ class Test_001_Login:
         else:
             assert False
 
+    @pytest.mark.dependency
     def test_login_successful(self, setup):
         self.page = setup
         lp = LoginPage(self.page)
